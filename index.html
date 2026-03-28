@@ -619,18 +619,45 @@ a  { text-decoration:none; color:inherit; }
    CTA / CONTACT
 ============================================ */
 #contact {
-  padding:110px 0;
-  position:relative; overflow:hidden;
+  padding: 110px 0;
+  position: relative; 
+  overflow: hidden;
+  cursor: pointer; /* Zmienia myszkę w łapkę */
   background:
-    radial-gradient(ellipse 90% 70% at 50% 50%,rgba(122,0,0,0.28) 0%,transparent 65%),
-    linear-gradient(180deg,var(--ash) 0%,#060403 50%,var(--ash) 100%);
+    radial-gradient(ellipse 90% 70% at 50% 50%, rgba(122,0,0,0.28) 0%, transparent 65%),
+    linear-gradient(180deg, var(--ash) 0%, #060403 50%, var(--ash) 100%);
 }
+
 #contact::before, #contact::after {
-  content:''; position:absolute; left:0;right:0; height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent); opacity:0.22;
+  content: ''; 
+  position: absolute; 
+  left: 0; 
+  right: 0; 
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent); 
+  opacity: 0.22;
 }
-#contact::before { top:0; }
-#contact::after  { bottom:0; }
+
+#contact::before { top: 0; }
+#contact::after  { bottom: 0; }
+
+/* --- DODAJ TO PONIŻEJ, ABY DŹWIĘK DZIAŁAŁ --- */
+
+/* Sprawia, że kliknięcie w napisy "przelatuje" do tła sekcji */
+#contact .cta-wrap, 
+#contact .bracket,
+#contact .cta-runes,
+#contact h2,
+#contact p {
+  pointer-events: none; 
+}
+
+/* Przywraca działanie przycisków, żeby dało się wejść na Instagram/WhatsApp */
+#contact .cta-btns,
+#contact .cta-btns a,
+#contact .cta-info {
+  pointer-events: auto;
+}
  
 /* Corner brackets */
 .bracket { position:absolute; width:28px; height:28px; border-color:rgba(196,162,68,0.22); border-style:solid; }
@@ -876,6 +903,7 @@ footer {
   </ul>
  
   <a href="#contact" class="btn nav-cta-desk btn-fire">Zacznij Teraz</a>
+
  
   <button class="burger" id="burger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1087,7 +1115,10 @@ footer {
         <a href="https://szt0karz.github.io/Tokarz_Cv/" target="_blank" class="dev-link">Wykute przez Szymona Tokarza</a>
     </div>
 </div>
- 
+
+<audio id="hammer-audio">
+  <source src="images/hammer.mp3" type="audio/mpeg">
+</audio>
 <!-- ===== JS ===== -->
 <script>
 /* -- BURGER -- */
@@ -1103,7 +1134,7 @@ document.querySelectorAll('.drawer-link').forEach(l => {
     drawer.classList.remove('open');
   });
 });
- 
+
 /* -- EMBERS -- */
 const ec = document.getElementById('embers');
 for (let i = 0; i < 45; i++) {
@@ -1122,20 +1153,20 @@ for (let i = 0; i < 45; i++) {
   `;
   ec.appendChild(e);
 }
- 
+
 /* -- SCROLL REVEAL -- */
 const ro = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
 }, { threshold: 0.1 });
 document.querySelectorAll('.reveal').forEach(el => ro.observe(el));
- 
+
 /* -- NAV SCROLL STYLE -- */
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   nav.style.background = window.scrollY > 60
     ? 'rgba(7,6,5,0.98)' : 'rgba(7,6,5,0.96)';
 }, { passive: true });
- 
+
 /* -- SMOOTH SCROLL -- */
 document.querySelectorAll('a[href^="#"]').forEach(a => {
   a.addEventListener('click', e => {
@@ -1143,6 +1174,23 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth' }); }
   });
 });
+
+/* -- AUDIO (HAMMER) -- */
+const hammerAudio = document.getElementById('hammer-audio');
+
+// Funkcja odtwarzająca audio
+function playHammerAudio() {
+  hammerAudio.currentTime = 0;
+  hammerAudio.play().catch(err => {
+    console.log("Odtwarzanie zablokowane przez przeglądarkę przed interakcją.");
+  });
+}
+
+// Dodajemy event do przycisków "Zacznij Teraz"
+document.querySelectorAll('.btn-fire, .drawer-cta').forEach(btn => {
+  btn.addEventListener('click', playHammerAudio);
+});
 </script>
+
 </body>
 </html>
